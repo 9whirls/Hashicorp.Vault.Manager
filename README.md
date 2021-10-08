@@ -1,5 +1,9 @@
 # Hashicorp.Vault.Manager
 Powershell module for Hashicorp Vault
+Install this module from PSGallery
+```
+Install-Module -Name Hashicorp.Vault.Manager
+```
 
 Function List
 ==================
