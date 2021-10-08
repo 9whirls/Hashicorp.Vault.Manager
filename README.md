@@ -30,6 +30,39 @@ Example
 ==================
 ```
 Get-VaultServer -Address myserver.mydomain.com -token mytoken
+
 Get-VaultPolicyName | Get-VaultPolicy
 Get-VaultGroupAliasID | Get-VaultGroupAlias
+
+$secret = @{password = 'this is a secret'}
+Set-VaultSecret -path secret/data/myfolder/mysecret -secret $secret
+
+$group = @{
+  name = "mygroup"
+  type = "external"
+  policies = @("mypolicy")
+  metadata = @{responsibility = "manage my secrets"}
+}
+Set-VaultGroup $group
+
+$groupAlias = @{
+  name = "????????-????-????-????-????????????" # Azure Group ID
+  mount_accessor = "auth_oidc_????????" # Accessor ID
+  canonical_id = "????????-????-????-????-????????????" # Vault group ID
+}
+Set-VaultGroupAlias $groupAlias
+
+$policy = @{
+  name = "mypolicy"
+  policy = @'
+path "secret/metadata/" {
+  capabilities = ["list", "read"]
+}
+
+path "secret/+/myfolder/*" {
+  capabilities = ["create", "read", "update", "delete", "list"]
+}
+'@  
+}
+Set-VaultPolicy $policy
 ```
