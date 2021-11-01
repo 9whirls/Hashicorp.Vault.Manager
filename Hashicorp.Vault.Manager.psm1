@@ -250,3 +250,31 @@ function Remove-VaultPolicy {
   }
   end {}
 }
+
+function Get-VaultGroupID {
+  param(  
+    $vault = $defaultVault
+  )
+    
+  $uri = $vault.url + "identity/group/id?list=true"
+  Invoke-RestMethod -Uri $uri -Headers $vault.head | Select -expandproperty data |
+    select -expandproperty key_info | 
+    get-member -MemberType NoteProperty | select -ExpandProperty name
+}
+
+function Get-VaultGroupByID {
+  param(
+    [parameter(ValueFromPipeline=$true)]
+    [string]
+      $id,
+      
+    $vault = $defaultVault
+  )
+  begin {}
+  process {
+    $uri = $vault.url + "identity/group/id/$id"
+    Invoke-RestMethod -Uri $uri -Headers $vault.head  |
+      select -expandproperty data
+  }
+  end {}
+}
