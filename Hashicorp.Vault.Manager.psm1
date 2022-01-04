@@ -58,8 +58,7 @@ function Set-VaultSecret {
   process {
     $uri = $vault.url + $path
     $data = @{data = $secret} | ConvertTo-Json
-    Invoke-RestMethod -Uri $uri -Headers $vault.head -Method Post -Body $data |
-      select -expandproperty data
+    Invoke-RestMethod -Uri $uri -Headers $vault.head -Method Post -Body $data
   }
   end {}
 }
