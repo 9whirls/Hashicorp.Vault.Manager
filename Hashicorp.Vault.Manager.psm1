@@ -38,7 +38,33 @@ function Get-VaultSecret {
   begin {}
   process {
     $uri = $vault.url + $path
-    Invoke-RestMethod -Uri $uri -Headers $vault.head
+    Invoke-RestMethod -Uri $uri -Headers $vault.head |
+      select -expandproperty data
+  }
+  end {}
+}
+
+function Get-VaultSecretList {
+  param(
+    [parameter(ValueFromPipeline=$true)]
+    [string]
+      $path,
+      
+    $vault = $defaultVault
+  )
+  begin {}
+  process {
+    $uri = $vault.url + $path
+    Invoke-RestMethod -Uri $uri -Headers $vault.head -CustomMethod 'list' |
+      select -ExpandProperty data |
+      select -ExpandProperty keys | %{
+        if ($_ -like '*/') {
+          Get-VaultSecretList -path ("$path/$_").trim("/") -vault $vault
+        } else {
+          "$path/$_"
+        }
+      }
+
   }
   end {}
 }
@@ -58,7 +84,8 @@ function Set-VaultSecret {
   process {
     $uri = $vault.url + $path
     $data = @{data = $secret} | ConvertTo-Json
-    Invoke-RestMethod -Uri $uri -Headers $vault.head -Method Post -Body $data
+    Invoke-RestMethod -Uri $uri -Headers $vault.head -Method Post -Body $data |
+      select -expandproperty data
   }
   end {}
 }
@@ -276,4 +303,14 @@ function Get-VaultGroupByID {
       select -expandproperty data
   }
   end {}
+}
+
+function Get-VaultUserList {
+  param(
+    $vault = $defaultVault
+  )
+  $uri = $vault.url + 'auth/userpass/users'
+  Invoke-RestMethod -Uri $uri -Headers $vault.head -CustomMethod 'list' |
+    select -ExpandProperty data |
+    select -ExpandProperty keys
 }
