@@ -12,7 +12,7 @@
 RootModule = 'Hashicorp.Vault.Manager.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.1'
+ModuleVersion = '1.2'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -74,7 +74,8 @@ FunctionsToExport = 'Get-VaultGroup', 'Get-VaultGroupAlias', 'Get-VaultGroupAlia
                'Get-VaultServer', 'Remove-VaultGroup', 'Remove-VaultGroupAlias', 
                'Remove-VaultPolicy', 'Remove-VaultSecret', 'Set-VaultGroup', 
                'Set-VaultGroupAlias', 'Set-VaultPolicy', 'Set-VaultSecret',
-               'Get-VaultGroupID', 'Get-VaultGroupByID'
+               'Get-VaultGroupID', 'Get-VaultGroupByID', 'Get-VaultSecretList',
+               'Get-VaultUserList'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
@@ -134,4 +135,3 @@ PrivateData = @{
 # DefaultCommandPrefix = ''
 
 }
-
