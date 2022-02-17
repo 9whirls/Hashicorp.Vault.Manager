@@ -314,3 +314,57 @@ function Get-VaultUserList {
     select -ExpandProperty data |
     select -ExpandProperty keys
 }
+
+function Get-VaultEntityID {
+  param(  
+    $vault = $defaultVault
+  )
+    
+  $uri = $vault.url + "identity/entity/id?list=true"
+  Invoke-RestMethod -Uri $uri -Headers $vault.head | Select -expandproperty data |
+    select -expandproperty key_info | 
+    get-member -MemberType NoteProperty | select -ExpandProperty name
+}
+
+function Get-VaultEntityByID {
+  param(
+    [parameter(ValueFromPipeline=$true)]
+    [string]
+      $id,
+      
+    $vault = $defaultVault
+  )
+  begin {}
+  process {
+    $uri = $vault.url + "identity/entity/id/$id"
+    Invoke-RestMethod -Uri $uri -Headers $vault.head  |
+      select -expandproperty data
+  }
+  end {}
+}
+
+function Get-VaultEntityAliasID {
+  param(  
+    $vault = $defaultVault
+  )
+    
+  $uri = $vault.url + "identity/entity-alias/id?list=true"
+  Invoke-RestMethod -Uri $uri -Headers $vault.head | Select -expandproperty data |
+    select -expandproperty keys
+}
+
+function Get-VaultEntityAlias {
+  param(
+    [parameter(ValueFromPipeline=$true)]
+    [string]
+      $id,
+      
+    $vault = $defaultVault
+  )
+  begin {}
+  process {
+    $uri = $vault.url + "identity/entity-alias/id/$id"
+    Invoke-RestMethod -Uri $uri -Headers $vault.head | Select -expandproperty data
+  }
+  end {}
+}
